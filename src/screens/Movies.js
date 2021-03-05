@@ -30,12 +30,12 @@ export default class Movies extends Component {
   componentDidMount() {
     this.callMoviesAPI();
     //console.log(this.props.movieObj);
-    var movObject = this.props.movieObj;
-    if(!Object.keys(movObject).length === 0){
-      var filteredData = this.state.movieArr;
-      filteredData.push(movObject);
-    this.setState({ movieArr: filteredData });
-    }
+    // var movObject = this.props.movieObj;
+    // if(!Object.keys(movObject).length === 0){
+    //   var filteredData = this.state.movieArr;
+    //   filteredData.push(movObject);
+    // this.setState({ movieArr: filteredData });
+    // }
   }
   // get movies  from swapi
   callMoviesAPI() {
