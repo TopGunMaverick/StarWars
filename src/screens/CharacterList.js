@@ -48,7 +48,6 @@ export default function CharacterList(props) {
   return (
     <View style={styles.container}>
       <FlatList
-        //numColumns={2}
         style={{ marginTop: 20 }}
         data={data}
         keyExtractor={item => item.first}
