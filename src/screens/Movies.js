@@ -14,6 +14,7 @@ import axios from 'axios';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import Toast from 'react-native-simple-toast';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const API_ENDPOINT = 'https://swapi.dev/api/films/';
 const FullScreenSpinnerView = FullScreenSpinnerHOC(View);
@@ -27,20 +28,15 @@ export default class Movies extends Component {
     movieArrMain: []
   };
 
+
   componentDidMount() {
     this.callMoviesAPI();
-    //console.log(this.props.movieObj);
-    // var movObject = this.props.movieObj;
-    // if(!Object.keys(movObject).length === 0){
-    //   var filteredData = this.state.movieArr;
-    //   filteredData.push(movObject);
-    // this.setState({ movieArr: filteredData });
-    // }
+
   }
   // get movies  from swapi
   callMoviesAPI() {
-    if(!this.state.isFetching){
-    this.setState({ logging: true });
+    if (!this.state.isFetching) {
+      this.setState({ logging: true });
     }
     axios.get(API_ENDPOINT)
       .then((response) => {
@@ -54,7 +50,7 @@ export default class Movies extends Component {
 
   onRefresh() {
     this.setState({ isFetching: true }, function () { this.callMoviesAPI(); });
-}
+  }
 
   listItemOnPressHandler = (item) => {
     Actions.characterList({ movieData: item });
@@ -65,25 +61,69 @@ export default class Movies extends Component {
     const filteredData = this.state.movieArr.filter(item => item.episode_id !== id);
     this.setState({ movieArr: filteredData });
     Toast.show("Deleted", Toast.SHORT);
-    
+
   }
 
   handleSearch = (text) => {
     let formattedQuery = text.toLowerCase();
     let fullList = this.state.movieArrMain;
-    let filteredList = fullList.filter((item) => { 
-      if(item.title.toLowerCase().match(formattedQuery))
+    let filteredList = fullList.filter((item) => {
+      if (item.title.toLowerCase().match(formattedQuery))
         return item;
     })
-    this.setState({ movieArr: filteredList,query:text });
-  
+    this.setState({ movieArr: filteredList, query: text });
+
   }
 
-  addNewData = () => {    
-    Actions.addMovie({movieData: this.state.movieArrMain});
+  addNewData = () => {
+    Actions.addMovie({
+      movieData: this.state.movieArrMain,
+      beforeBack: () => { this.loadData() }
+    });
+  }
+
+  loadData = async () => {
+
+
+    try {
+      const jsonValue = await AsyncStorage.getItem('movie_key')
+      console.log('Done Load Data', jsonValue)
+      var movObject = JSON.parse(jsonValue);
+
+      var filteredData = this.state.movieArr;
+      filteredData.push(movObject);
+      this.setState({ movieArr: filteredData });
+
+    } catch (e) {
+      // read error
+      console.log("AsyncStorage Error", e);
+    }
+
+
+
   }
 
 
+
+  getMyObject = async () => {
+    console.log('Done Load Data 1')
+    try {
+      const jsonValue = await AsyncStorage.getItem('movie_key')
+      console.log('Done Load Data', jsonValue)
+      var movObject = JSON.parse(jsonValue);
+
+      var filteredData = this.state.movieArr;
+      filteredData.push(movObject);
+      this.setState({ movieArr: filteredData });
+      // return jsonValue != null ? JSON.parse(jsonValue) : null
+    } catch (e) {
+      // read error
+      console.log("AsyncStorage Error", e);
+    }
+
+    console.log('Done Load Data')
+
+  }
 
   render() {
     return (
@@ -117,17 +157,17 @@ export default class Movies extends Component {
           </View>
 
           <TouchableOpacity
-          style={[
-            {
-              marginEnd:20,
-              alignSelf: 'flex-end',
-              backgroundColor:'#11B8FF'
-    
-            }
-          ]}
-           onPress={() => this.addNewData()}>
-                  <Text style={styles.titleText}>Add new </Text>
-                  </TouchableOpacity>
+            style={[
+              {
+                marginEnd: 20,
+                alignSelf: 'flex-end',
+                backgroundColor: '#11B8FF'
+
+              }
+            ]}
+            onPress={() => this.addNewData()}>
+            <Text style={styles.titleText}>Add new </Text>
+          </TouchableOpacity>
 
           <FlatList style={{ marginTop: 20 }} data={this.state.movieArr}
             renderItem={({ item, index }) => (
@@ -194,8 +234,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#11B8FF',
     justifyContent: 'center',
     alignItems: 'center',
-   marginStart:20,
-   marginEnd:20
+    marginStart: 20,
+    marginEnd: 20
   },
   movieSection: {
     marginTop: hp('2%'),
@@ -247,5 +287,5 @@ const styles = StyleSheet.create({
   closeIcon: {
     marginRight: wp('1%')
   },
-  
+
 });

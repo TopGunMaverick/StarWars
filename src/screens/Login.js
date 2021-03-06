@@ -9,7 +9,7 @@ import {
   Text,
   KeyboardAvoidingView
 } from 'react-native';
-import { Actions } from 'react-native-router-flux'; 
+import { Actions } from 'react-native-router-flux';
 import FullScreenSpinnerHOC from '../hoc/FullScreenSpinnerHOC';
 import DismissKeyboardHOC from '../hoc/DismissKeyboardHOC';
 import KeyboardAwareHOC from '../hoc/KeyboardAwareHOC';
@@ -20,7 +20,7 @@ const FullSCreenSpinnerAndDismissKeyboardView = FullScreenSpinnerHOC(
   DismissKeyboardView
 );
 
-const KeyboardAwareImage =KeyboardAwareHOC(Image);
+const KeyboardAwareImage = KeyboardAwareHOC(Image);
 const KeyboardAwareView = KeyboardAwareHOC(View);
 
 export default class Login extends Component {
@@ -33,7 +33,7 @@ export default class Login extends Component {
     await new Promise(resolve => {
       setTimeout(resolve, 2000);
     });
-    
+
     Toast.show("SIGN IN success", Toast.SHORT);
     this.setState({ logging: false });
     Actions.movies();
@@ -42,48 +42,48 @@ export default class Login extends Component {
     return (
 
       <FullSCreenSpinnerAndDismissKeyboardView
-      spinner={this.state.logging}
-      style={styles.container}>
-      <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-        <KeyboardAwareView
-          style={{
-            flex: 1,
-            marginBottom: 40
-          }}
-          styleDuringKeyboardShow={{ marginBottom: 10 }}
-        >
-          <KeyboardAwareImage
-            resizeMode="contain"
-            style={[
-              {
-                height: '100%',
-                width: '100%'
-              }
-            ]}
-            styleDuringKeyboardShow={{ opacity: 0.5 }}
-            source={require('../images/img_login/gembul.png')}
+        spinner={this.state.logging}
+        style={styles.container}>
+        <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+          <KeyboardAwareView
+            style={{
+              flex: 1,
+              marginBottom: 40
+            }}
+            styleDuringKeyboardShow={{ marginBottom: 10 }}
+          >
+            <KeyboardAwareImage
+              resizeMode="contain"
+              style={[
+                {
+                  height: '100%',
+                  width: '100%'
+                }
+              ]}
+              styleDuringKeyboardShow={{ opacity: 0.5 }}
+              source={require('../images/img_login/gembul.png')}
+            />
+          </KeyboardAwareView>
+          <TextInput placeholder="Username" style={[styles.textInput]} />
+          <TextInput
+            placeholder="Password"
+            style={[styles.textInput, { marginVertical: 20 }]}
           />
-        </KeyboardAwareView>
-        <TextInput placeholder="Username" style={[styles.textInput]} />
-        <TextInput
-          placeholder="Password"
-          style={[styles.textInput, { marginVertical: 20 }]}
-        />
 
-        <TouchableOpacity
-          onPress={() => {
-            this.callLoginAPI();
-          }}
-          style={[styles.button]}
-        >
-          <Text style={{ color: 'white', fontSize: 20, fontWeight: '600' }}>
-            SIGN IN
+          <TouchableOpacity
+            onPress={() => {
+              this.callLoginAPI();
+            }}
+            style={[styles.button]}
+          >
+            <Text style={{ color: 'white', fontSize: 20, fontWeight: '600' }}>
+              SIGN IN
           </Text>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
-      
-     
-    </FullSCreenSpinnerAndDismissKeyboardView>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+
+
+      </FullSCreenSpinnerAndDismissKeyboardView>
     );
   }
 }
